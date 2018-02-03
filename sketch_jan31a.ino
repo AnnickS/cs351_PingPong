@@ -13,9 +13,14 @@ int P1SET = 0;
 int P2SET = 0;
 int P1GAME = 0;
 int P2GAME = 0;
-int 
+int redLED = 7;
+int blueLED = 6;
+int PNTS = 0;
+bool turn = false;
 
 void setup() {
+  pinMode(redLED, OUTPUT);
+  pinMode(blueLED, OUTPUT);
   // set up the LCD's number of columns and rows:
   lcd.begin(16, 2);
   // Print a message to the LCD.
@@ -26,22 +31,46 @@ void setup() {
 }
 
 void loop() {
+  //Changes which side serves every 2 points
+  if(PNTS == 2){
+    PNTS = 0;
+    if(!turn){
+      turn = true;
+    }
+    else{
+      turn = false;
+    }
+  }
+  //Changes the lights
+  if(!turn){
+    digitalWrite(redLED, HIGH);
+    digitalWrite(blueLED, LOW);
+  }
+  else{
+    digitalWrite(blueLED, HIGH);
+    digitalWrite(redLED, LOW);
+  }
+ 
   // Increments score for player 1
     if(digitalRead(BUTTON_blue) == HIGH){
       P1SET++;
+      PNTS++;
       delay(500);
     } //Decrements score for player 1
     else if(digitalRead(BUTTON_red) == HIGH && P1SET > 0){
       P1SET--;
+      PNTS--;
       delay(500);
     }
   // Increments score for player 2
     if(digitalRead(BUTTON_yellow) == HIGH){
       P2SET++;
+      PNTS++;
       delay(500);
     } //Decrements score for player 2
     else if(digitalRead(BUTTON_green) == HIGH && P2SET > 0){
       P2SET--;
+      PNTS--;
       delay(500);
     }
 
@@ -57,8 +86,6 @@ void loop() {
       P2SET = 0;
       P2GAME++;
     }
-
-
     
   // set the cursor to column 0, line 1
   // (note: line 1 is the second row, since counting begins with 0):
